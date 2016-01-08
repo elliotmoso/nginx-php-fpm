@@ -1,6 +1,10 @@
 FROM ubuntu:14.04.2
 MAINTAINER Hector Ros <hector@brutalsys.com >
 
+# Enviroment Variable
+ENV NEWRELIC_LICENSE    false
+ENV NEWRELIC_APP        false
+
 # Surpress Upstart errors/warning
 RUN dpkg-divert --local --rename --add /sbin/initctl
 RUN ln -sf /bin/true /sbin/initctl
@@ -60,10 +64,12 @@ mkdir -p /etc/nginx/ssl/
 ADD ./nginx-site.conf /etc/nginx/sites-available/default.conf
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf
 
-# Add git commands to allow container updating
-ADD ./pull /usr/bin/pull
-ADD ./push /usr/bin/push
-RUN chmod 755 /usr/bin/pull && chmod 755 /usr/bin/push
+# Install and Configure Newrelic
+RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list && \
+    wget -O - https://download.newrelic.com/548C16BF.gpg | apt-key add - && \
+    echo "deb http://apt.newrelic.com/debian/ newrelic non-free" > /etc/apt/sources.list.d/newrelic.list && \
+    apt-get update -qqy
+RUN apt-get install newrelic-php5 -y
 
 # Supervisor Config
 ADD ./supervisord.conf /etc/supervisord.conf
