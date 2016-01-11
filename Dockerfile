@@ -4,6 +4,7 @@ MAINTAINER Hector Ros <hector@brutalsys.com >
 # Enviroment Variable
 ENV NEWRELIC_LICENSE    false
 ENV NEWRELIC_APP        false
+ENV PHP_CHILDREN        false
 
 # Surpress Upstart errors/warning
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -71,6 +72,9 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list && \
     apt-get update -qqy
 RUN apt-get install newrelic-php5 -y
 
+# Add static PHP-FPM Config
+ADD ./www.conf /etc/php5/fpm/pool.d/www.conf
+
 # Supervisor Config
 ADD ./supervisord.conf /etc/supervisord.conf
 
@@ -78,8 +82,6 @@ ADD ./supervisord.conf /etc/supervisord.conf
 ADD ./start.sh /start.sh
 RUN chmod 755 /start.sh
 
-# Setup Volume
-#VOLUME ["/usr/share/nginx/html"]
 
 # add test PHP file
 # ADD ./index.php /usr/share/nginx/html/index.php
