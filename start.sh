@@ -31,5 +31,9 @@ if [ "$NEWRELIC_APP" != "false" ]; then
     sed -i "s/^newrelic.appname = .*/newrelic.appname = \"${NEWRELIC_APP}\"/" /etc/php5/fpm/conf.d/20-newrelic.ini
 fi
 
+# Copy Nginx custom config if Need
+cp /usr/share/nginx/html/_cnf_nginx/nginx.conf /etc/nginx/sites-available/custom.conf
+ln -s /etc/nginx/sites-available/custom.conf /etc/nginx/sites-enabled/custom.conf
+
 # Start supervisord and services
 /usr/bin/supervisord -n -c /etc/supervisord.conf
