@@ -34,6 +34,10 @@ fi
 # Copy Nginx custom config if Need
 cp /usr/share/nginx/html/_cnf_nginx/nginx.conf /etc/nginx/sites-available/custom.conf
 ln -s /etc/nginx/sites-available/custom.conf /etc/nginx/sites-enabled/custom.conf
+if [ -f /etc/nginx/sites-available/custom.conf ];
+then
+   rm -f /etc/nginx/sites-available/default.conf
+fi
 
 # Start supervisord and services
 /usr/bin/supervisord -n -c /etc/supervisord.conf
