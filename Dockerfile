@@ -84,6 +84,14 @@ ADD ./supervisord.conf /etc/supervisord.conf
 ADD ./start.sh /start.sh
 RUN chmod 755 /start.sh
 
+# ADD PCNTL SUPPORT
+RUN apt-get -qy install dpkg-dev php5-dev && \
+mkdir -p /tmp/php && cd /tmp/php && \
+apt-get -qy source php5 &&\
+cd php*/ext/pcntl && \
+phpize && ./configure && make && make install && \
+echo "extension=pcntl.so">/etc/php5/mods-available/pcntl.ini && \
+php5enmod pcntl
 
 # add test PHP file
 # ADD ./index.php /usr/share/nginx/html/index.php
