@@ -84,13 +84,17 @@ ADD ./start.sh /start.sh
 RUN chmod 755 /start.sh
 
 # ADD PCNTL SUPPORT
-RUN apt-get -qy install dpkg-dev php5-dev && \
+RUN codename=$(dpkg --status tzdata|grep Provides|cut -f2 -d'-') && \
+echo "deb-src http://httpredir.debian.org/debian $codename main"> /etc/apt/sources.list.d/sources.list && \
+apt-get update && \
+apt-get -qy install php5-dev && \
 mkdir -p /tmp/php && cd /tmp/php && \
 apt-get -qy source php5 &&\
 cd php*/ext/pcntl && \
 phpize && ./configure && make && make install && \
 echo "extension=pcntl.so">/etc/php5/fpm/conf.d/20-pcntl.ini && \
 cd / && rm -rvf /tmp/php && apt-get -qy purge dpkg-dev php5-dev && \
+rm -f /etc/apt/sources.list.d/sources.list && \
 apt-get -qy clean
 
 # add test PHP file
