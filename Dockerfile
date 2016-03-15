@@ -5,6 +5,7 @@ MAINTAINER Elliot Morales <elliot@brutalsys.com >
 ENV NEWRELIC_LICENSE    false
 ENV NEWRELIC_APP        false
 ENV PHP_CHILDREN        false
+ENV TERM				xterm
 
 # Surpress Upstart errors/warning
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -17,6 +18,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Add sources for latest nginx
 # Install software requirements
 RUN cd /tmp/ && wget -O - http://nginx.org/keys/nginx_signing.key | apt-key add - && \
+codename=$(dpkg --status tzdata|grep Provides|cut -f2 -d'-') && \
 echo "deb http://nginx.org/packages/debian/ $codename nginx">/etc/apt/sources.list.d/nginx.list && \
 echo "deb-src http://nginx.org/packages/debian/ $codename nginx">>/etc/apt/sources.list.d/nginx.list
 RUN apt-get update && \
@@ -94,8 +96,6 @@ apt-get -qy clean
 # add test PHP file
 # ADD ./index.php /usr/share/nginx/html/index.php
 RUN chown -Rf www-data.www-data /usr/share/nginx/html/
-
-ENV TERM xterm
 
 COPY redis.conf /usr/local/etc/redis/redis.conf
 
