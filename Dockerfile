@@ -1,5 +1,5 @@
-FROM ubuntu:14.04.2
-MAINTAINER Hector Ros <hector@brutalsys.com >
+FROM redis:3
+MAINTAINER Elliot Morales <elliot@brutalsys.com >
 
 # Enviroment Variable
 ENV NEWRELIC_LICENSE    false
@@ -100,8 +100,11 @@ RUN chown -Rf www-data.www-data /usr/share/nginx/html/
 
 ENV TERM xterm
 
+COPY redis.conf /usr/local/etc/redis/redis.conf
+
 # Expose Ports
 EXPOSE 443
 EXPOSE 80
+EXPOSE 6379
 
 CMD ["/bin/bash", "/start.sh"]
