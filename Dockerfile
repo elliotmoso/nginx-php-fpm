@@ -99,8 +99,7 @@ apt-get -qy clean
 
 # add test PHP file
 # ADD ./index.php /usr/share/nginx/html/index.php
-RUN chown -Rf www-data.www-data /usr/share/nginx/html/
-
+RUN chown -Rf nginx.nginx /usr/share/nginx/html/
 COPY redis.conf /usr/local/etc/redis/redis.conf
 
 # Expose Ports
