@@ -90,12 +90,15 @@ mkdir -p /tmp/php && cd /tmp/php && \
 apt-get -qy source php5 &&\
 cd php*/ext/pcntl && \
 phpize && ./configure && make && make install && \
-echo "extension=pcntl.so">/etc/php5/mods-available/pcntl.ini && \
-php5enmod pcntl
+echo "extension=pcntl.so">/etc/php5/fpm/conf.d/20-pcntl.ini && \
+cd / && rm -rvf /tmp/php && apt-get -qy purge dpkg-dev php5-dev && \
+apt-get -qy clean
 
 # add test PHP file
 # ADD ./index.php /usr/share/nginx/html/index.php
 RUN chown -Rf www-data.www-data /usr/share/nginx/html/
+
+ENV TERM xterm
 
 # Expose Ports
 EXPOSE 443
