@@ -32,11 +32,10 @@ if [ "$NEWRELIC_APP" != "false" ]; then
 fi
 
 # Copy Nginx custom config if Need
-cp /usr/share/nginx/html/_cnf_nginx/nginx.conf /etc/nginx/sites-available/custom.conf
-ln -s /etc/nginx/sites-available/custom.conf /etc/nginx/sites-enabled/custom.conf
-if [ -f /etc/nginx/sites-available/custom.conf ];
+cp /usr/share/nginx/html/_cnf_nginx/nginx.conf /etc/nginx/conf.d/custom.conf
+if [ -f /etc/nginx/conf.d/custom.conf ];
 then
-   rm -f /etc/nginx/sites-available/default.conf
+   rm -f /etc/nginx/conf.d/default.conf
 fi
 
 # Start supervisord and services
